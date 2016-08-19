@@ -9,8 +9,8 @@ class PurchaseLine:
     __name__ = 'purchase.line'
     __metaclass__ = PoolMeta
 
-    def get_invoice_line(self, invoice_type):
-        lines = super(PurchaseLine, self).get_invoice_line(invoice_type)
+    def get_invoice_line(self):
+        lines = super(PurchaseLine, self).get_invoice_line()
         if self.purchase.invoice_method == 'shipment':
             for line in lines:
                 if line.stock_moves:
