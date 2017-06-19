@@ -254,7 +254,7 @@ Validate Shipments giving a different unit price::
     >>> shipment.supplier = supplier
     >>> for move in purchase.moves:
     ...     incoming_move = Move(id=move.id)
-    ...     incoming_move.cost_price = Decimal('20')
+    ...     incoming_move.unit_price = Decimal('20')
     ...     shipment.incoming_moves.append(incoming_move)
     >>> shipment.save()
     >>> shipment.origins == purchase.rec_name

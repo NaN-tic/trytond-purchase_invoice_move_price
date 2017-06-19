@@ -14,5 +14,5 @@ class PurchaseLine:
         if self.purchase.invoice_method == 'shipment':
             for line in lines:
                 if line.stock_moves:
-                    line.unit_price = line.stock_moves[0].cost_price
+                    line.unit_price = line.stock_moves[0].unit_price
         return lines
