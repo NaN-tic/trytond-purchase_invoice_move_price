@@ -46,6 +46,12 @@ Create chart of accounts::
     >>> account_tax = accounts['tax']
     >>> account_cash = accounts['cash']
 
+Create tax::
+
+    >>> TaxCode = Model.get('account.tax.code')
+    >>> tax = create_tax(Decimal('.10'))
+    >>> tax.save()
+
 Create journals::
 
     >>> Journal = Model.get('account.journal')
@@ -59,6 +65,16 @@ Create parties::
     >>> Party = Model.get('party.party')
     >>> supplier = Party(name='Supplier')
     >>> supplier.save()
+
+Create account category::
+
+    >>> ProductCategory = Model.get('product.category')
+    >>> account_category = ProductCategory(name="Account Category")
+    >>> account_category.accounting = True
+    >>> account_category.account_expense = expense
+    >>> account_category.account_revenue = revenue
+    >>> account_category.customer_taxes.append(tax)
+    >>> account_category.save()
 
 Create product::
 
@@ -75,8 +91,7 @@ Create product::
     >>> template.salable = True
     >>> template.list_price = Decimal('10')
     >>> template.cost_price_method = 'fixed'
-    >>> template.account_expense = expense
-    >>> template.account_revenue = revenue
+    >>> template.account_category = account_category
     >>> template.save()
     >>> product.template = template
     >>> product.cost_price = Decimal('5')
