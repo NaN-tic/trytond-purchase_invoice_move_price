@@ -144,7 +144,7 @@ Purchase 5 products::
 
 Invoice line must be linked to stock move::
 
-    >>> _, invoice_line1, invoice_line2 = sorted(invoice.lines,
+    >>> invoice_line1, invoice_line2 = sorted(invoice.lines,
     ...     key=lambda l: l.quantity or 0)
     >>> invoice_line1.unit_price == Decimal('5.0000')
     True
