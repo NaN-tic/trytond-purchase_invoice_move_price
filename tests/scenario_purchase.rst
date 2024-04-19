@@ -198,7 +198,7 @@ Validate Shipments giving a different unit price::
     >>> shipment.origins == purchase.rec_name
     True
     >>> ShipmentIn.receive([shipment.id], config.context)
-    >>> ShipmentIn.done([shipment.id], config.context)
+    >>> ShipmentIn.do([shipment.id], config.context)
     >>> purchase.reload()
     >>> len(purchase.shipments), len(purchase.shipment_returns)
     (1, 0)
