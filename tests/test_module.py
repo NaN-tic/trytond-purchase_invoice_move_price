@@ -9,6 +9,8 @@ from trytond.tests.test_tryton import ModuleTestCase
 class PurchaseInvoiceMovePriceTestCase(CompanyTestMixin, ModuleTestCase):
     'Test PurchaseInvoiceMovePrice module'
     module = 'purchase_invoice_move_price'
+    extras = ['purchase_discount']
+
 
 
 del ModuleTestCase
