@@ -28,7 +28,7 @@ class Test(unittest.TestCase):
         today = datetime.date.today()
 
         # Activate purchase_invoice_move_price
-        config = activate_modules('purchase_invoice_move_price')
+        config = activate_modules(['purchase_invoice_move_price', 'purchase_discount', 'account_invoice_discount'])
 
         # Create company
         _ = create_company()
@@ -211,3 +211,44 @@ class Test(unittest.TestCase):
         # Invoice lines must have the same price as the one given in the shipment
         self.assertEqual(invoice_line1.unit_price, Decimal('20.0000'))
         self.assertEqual(invoice_line2.unit_price, Decimal('20.0000'))
+
+        # Shipment line unit price modification affecting invoice line
+        Purchase = Model.get('purchase.purchase')
+        PurchaseLine = Model.get('purchase.line')
+        purchase = Purchase()
+        purchase.party = supplier
+        purchase.payment_term = payment_term
+        purchase.invoice_method = 'shipment'
+        purchase_line = PurchaseLine()
+        purchase.lines.append(purchase_line)
+        purchase_line.product = product
+        purchase_line.quantity = 1.0
+        purchase_line.base_price = Decimal('10.0')
+        purchase_line.discount_rate = Decimal('0.1')
+        purchase.click('quote')
+        purchase.click('confirm')
+        purchase.click('process')
+
+        # Validate Shipments giving a different unit price
+        Move = Model.get('stock.move')
+        ShipmentIn = Model.get('stock.shipment.in')
+        shipment = ShipmentIn()
+        shipment.supplier = supplier
+
+        for move in purchase.moves:
+            incoming_move = Move(id=move.id)
+            incoming_move.unit_price = Decimal('11')
+            shipment.incoming_moves.append(incoming_move)
+
+        shipment.save()
+        self.assertEqual(shipment.origins, purchase.rec_name)
+        ShipmentIn.receive([shipment.id], config.context)
+        ShipmentIn.do([shipment.id], config.context)
+        purchase.reload()
+        self.assertEqual(len(purchase.shipments), 1)
+
+        self.assertEqual(len(purchase.shipment_returns), 0)
+        for line in move.invoice_lines:
+            self.assertEqual(line.unit_price, Decimal('11.0000'))
+            self.assertEqual(line.base_price, None)
+            self.assertEqual(line.discount, None)
