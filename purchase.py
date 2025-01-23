@@ -12,7 +12,7 @@ class PurchaseLine(metaclass=PoolMeta):
         lines = super().get_invoice_line()
         if self.purchase.invoice_method == 'shipment':
             for line in lines:
-                if line.stock_moves:
+                if getattr(line, 'stock_moves', None):
                     line.unit_price = line.stock_moves[0].unit_price
                     if hasattr(line.__class__, 'base_price'):
                         if line.stock_moves[0].unit_price != line.stock_moves[0].origin.unit_price:
