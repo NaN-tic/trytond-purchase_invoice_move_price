@@ -137,11 +137,11 @@ class Test(unittest.TestCase):
         self.assertEqual(invoice_line1.unit_price, Decimal('5.0000'))
         self.assertEqual(invoice_line2.unit_price, Decimal('5.0000'))
 
-        # Purchase 5 products with an invoice method 'on shipment'
+        # Purchase 5 products with an invoice method 'on fulfillment'
         purchase = Purchase()
         purchase.party = supplier
         purchase.payment_term = payment_term
-        purchase.invoice_method = 'shipment'
+        purchase.invoice_method = 'fulfillment'
         purchase_line = PurchaseLine()
         purchase.lines.append(purchase_line)
         purchase_line.product = product
@@ -218,7 +218,7 @@ class Test(unittest.TestCase):
         purchase = Purchase()
         purchase.party = supplier
         purchase.payment_term = payment_term
-        purchase.invoice_method = 'shipment'
+        purchase.invoice_method = 'fulfillment'
         purchase_line = PurchaseLine()
         purchase.lines.append(purchase_line)
         purchase_line.product = product
